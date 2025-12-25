@@ -2,10 +2,6 @@
 
 ## Project Description
 
-## Project Description
-
-## Project Description
-
 FSharpTestApi is a sample API written in F# demonstrating **functional domain modeling** inspired by Scott Wlaschin's *Domain Modeling in Functional Way*.
 
 In addition, this project applies concepts learned from *Essential F#* by Ian Russell, including **Active Patterns** and **Partial Active Patterns**, to implement validation and error handling in a composable, type-safe manner.
