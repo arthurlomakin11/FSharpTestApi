@@ -2,7 +2,8 @@ namespace FSharpTestApi
 
 #nowarn "20"
 
-open System
+open FSharpTestApi.Application
+open FSharpTestApi.Infrastructure
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
@@ -22,31 +23,23 @@ module Program =
             .AddJsonOptions(fun options ->
                 JsonFSharpOptions.Default().AddToJsonSerializerOptions(options.JsonSerializerOptions))
 
-        let messageModelToDomain (model: MessageModel) : Message =
-            match model.Type with
-            | MessageType.Image ->
-                ImageMessage
-                    { Content = model.Content
-                      Url = model.Url.Value }
 
-            | MessageType.Text -> TextMessage { Content = model.Content }
-            | _ -> ArgumentOutOfRangeException() |> raise
+        builder.Services.AddSingleton<UnvalidatedMessageModelToValidated>(
+            MessageValidation.unvalidatedMessageModelToValidated)
 
-        let domainToMessageModel (message: Message) : MessageModel =
-            match message with
-            | TextMessage message ->
-                { Type = MessageType.Text
-                  Content = message.Content
-                  Url = Option.None }
-            | ImageMessage message ->
-                { Type = MessageType.Image
-                  Content = message.Content
-                  Url = Option.Some message.Url }
+        builder.Services.AddSingleton<MessageModelToDomain>(
+            MessageMapping.messageModelToDomain)
 
-
-        builder.Services.AddSingleton<MessageModelToDomain>(messageModelToDomain)
-        builder.Services.AddSingleton<DomainToMessageModel>(domainToMessageModel)
-
+        builder.Services.AddSingleton<DomainToMessageModel>(
+            MessageMapping.domainToMessageModel)
+               
+        // Partial application
+        builder.Services.AddSingleton<MessagePipeline>(
+            MessageProcessing.processMessagePipeline
+                MessageValidation.unvalidatedMessageModelToValidated
+                MessageMapping.messageModelToDomain
+                MessageMapping.domainToMessageModel)
+        
         builder.Services.AddOpenApi()
 
 

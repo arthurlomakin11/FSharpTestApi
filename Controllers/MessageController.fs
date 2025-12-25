@@ -1,14 +1,14 @@
 namespace FSharpTestApi.Controllers
 
 open FSharpTestApi
+open FSharpTestApi.Infrastructure.ResultToActionResult
 open Microsoft.AspNetCore.Mvc
 
 [<ApiController>]
 [<Route("[controller]")>]
-type MessageController(messageModelToDomain: MessageModelToDomain, domainToMessageModel: DomainToMessageModel) =
+type MessageController(pipeline: MessagePipeline) =
     inherit ControllerBase()
 
     [<HttpPost>]
-    member _.Post([<FromBody>] model: MessageModel) =
-        let message = messageModelToDomain model |> domainToMessageModel
-        message
+    member this.Post([<FromBody>] model: UnvalidatedMessageModel) =
+        model |> pipeline |> toActionResult this

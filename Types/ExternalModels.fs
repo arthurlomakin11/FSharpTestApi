@@ -12,3 +12,9 @@ type MessageModel = {
     Content: string
     Url: string option
 }
+
+type UnvalidatedMessageModel = {
+    Type: MessageType
+    Content: string
+    Url: string option
+}

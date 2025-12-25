@@ -5,11 +5,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Domain.fs" />
-		<Compile Include="ExternalModels.fs" />
-		<Compile Include="MessageTransfomers.fs" />
+		<Compile Include="Types\Domain.fs" />
+		<Compile Include="Types\ExternalModels.fs" />
+		<Compile Include="Types\MessageTransfomers.fs" />
+		<Compile Include="Application\MessageMapping.fs" />
+		<Compile Include="Application\MessageValidation.fs" />
+		<Compile Include="Application\MessageProcessing.fs" />
+		<Compile Include="Infrastructure\Validation.fs" />
+		<Compile Include="Infrastructure\ResultToActionResult.fs" />
 		<Compile Include="Controllers\MessageController.fs" />
 		<Compile Include="Program.fs" />
+		<Content Include="readme.md" />
 	</ItemGroup>
 
 	<ItemGroup>
